@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASB Image edit</title>    
+ <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+ <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="img.css">
+ 
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-warning rounded">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1 ">ASB Game </span>
+          <span ><a class="btn btn-primary" href="https://www.google.com/webhp" role="button">Exit</a></span>
+        </div>
+       
+      </nav>
+      <h1>Input An Image And Write On It</h1>
+<div class="pg_given">
+  <div class="controls">
+    <input class="inp" type="file" id="usrimg"  name="usrimg"/>
+    <label class="msgshown" for="name">Choose an image.</label>
+    
+    <input class="inp" id="name" type="text" value=""/>
+    <label class="msgshown" for="name">Enter Text</label>
+  </div>
+  <div id="canvas-wrap">
+     <canvas style="display:block" id="imgcnvs" width=400px height=400px>
+        <canvas id="canid"></canvas>
+    </canvas> 
+  </div>
+  
+</div>
+<script>
+    var text_title ="Overlay text";
+var usrimg = document.getElementById('usrimg');
+    usrimg.addEventListener('change', image, false);
+var canvas = document.getElementById('imgcnvs');
+var ctx = canvas.getContext('2d');
+var img = new Image();
+img.crossOrigin="anonymous";
+
+window.addEventListener('load', placevalue)
+
+function placevalue() {
+    img.onload = function() {
+        overlay(img);
+        putext();
+        dynamictxt(img)
+    };
+  
+  
+}
+function overlay(img) {
+    ctx.drawImage(img,0,0);
+    ctx.fillStyle = 'rgba(30, 144, 255, 0.4)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+function putext() {
+    ctx.fillStyle = "white";
+    ctx.textBaseline = 'middle';
+    ctx.font = "50px 'Montserrat'";
+    ctx.fillText(text_title, 50, 50);
+}
+function dynamictxt(img) {
+  document.getElementById('name').addEventListener('keyup', function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    overlay(img);
+    putext(); 
+    text_title = this.value;
+    ctx.fillText(text_title, 50, 50);
+  });
+}
+function image(e) {
+    var reader = new FileReader();
+    var img = "";
+    var src = "";
+    reader.onload = function(event) {
+        img = new Image();
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+        }
+        img.src = event.target.result;
+        src = event.target.result;
+        canvas.classList.add("show");
+        overlay(img);
+        putext(); 
+        dynamictxt(img);   
+    }
+
+    reader.readAsDataURL(e.target.files[0]); 
+ 
+}
+function convertToImage() {
+	window.open(canvas.toDataURL('png'));
+}
+document.getElementById('download').onclick = function download() {
+		convertToImage();
+}
+
+
+
+</script>
+
+</body>
+</html>
